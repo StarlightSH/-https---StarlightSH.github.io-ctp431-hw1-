@@ -352,7 +352,7 @@ play_button.on('change',function(v) {
 	while (v==1) {
 		var loop = audioContext.createBufferSource();
 		loop.connect(audioContext.destination);
-		loop.start(audioContext.destination);
+		loop.start();
 	}
 })
 

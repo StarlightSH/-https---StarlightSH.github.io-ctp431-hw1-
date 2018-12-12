@@ -350,7 +350,7 @@ var play_button = new Nexus.TextButton('#play_button',{
 
 play_button.on('change',function(v) {
 	while (v==1) {
-		var loop = audioRecorder.createBufferSource();
+		var loop = audioRecorder.context.createBufferSource();
 		loop.connect(audioRecorder.destination);
 		loop.start(audioRecorder.destination);
 	}
@@ -653,7 +653,7 @@ function keyboardDown(key) {
 		case 80 : //'p'
 		var pp_sound = document.getElementById("pp_sound");
 		pp_sound.calssName = 'active';
-		simulateClick(_sound);
+		simulateClick(pp_sound);
 		break;
 
 		case 65 : //'a'

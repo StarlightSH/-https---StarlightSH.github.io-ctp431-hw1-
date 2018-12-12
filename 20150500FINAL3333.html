@@ -1,0 +1,908 @@
+﻿<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title> CTP431 Music and Audio Computing - Final Project : 20150500 Seonghui YU </title>
+	<link href="https://fonts.googleapis.com/css?family=Work%20Sans" rel="stylesheet">
+	<script type="text/javascript" src="NexusUI.js"></script>
+	<script type="text/javascript" src="recorder.js"></script>
+	<script type="text/javascript" src="audiodisplay.js"></script>
+	<script type="text/javascript" src="main.js"></script>
+
+</head>
+
+<style>
+body, html{
+	height:100%;
+	margin-left:10%;
+	margin-right:10%;
+	font-family:'Work Sans';
+}
+canvas {
+	display: inline-block; 
+	background: #202020; 
+	width: 95%;
+	height: 45%;
+	box-shadow: 0px 0px 10px blue;
+}
+
+#controls {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-around;
+	height: 20%;
+	width: 100%;
+}
+#record {height : 15vh;}
+
+#record.recording {
+	background: red;
+	background: -webkit-radial-gradient(center, ellipse cover, #ff0000 0%,lightgrey 75%,lightgrey 100%,#7db9e8 100%); 
+	background: -moz-radial-gradient(center, ellipse cover, #ff0000 0%,lightgrey 75%,lightgrey 100%,#7db9e8 100%); 
+	background: radial-gradient(center, ellipse cover, #ff0000 0%,lightgrey 75%,lightgrey 100%,#7db9e8 100%); 
+}
+
+#save, #save img { height: 10vh; }
+#save { opacity: 0.25;}
+#save[download] { opacity: 1;}
+#viz {
+	height: 80%;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	align-items: center;
+}
+@media (orientation : landscape) {
+	body { flex-direction: row;}
+	#controls { flex-direction: column; height: 100%; width: 10%;}
+	#viz { height: 100%; width: 90%;}
+}
+
+
+button {
+	padding: 5px;
+	background : rgb(200, 200, 200);
+	border : 1px solid rgb(122, 122, 122);
+	border-radius: 2px;
+	outline : none;
+	width : 60px;
+	height : 60px;
+	font-size : 15px;
+	font-weight: 500;
+	font-family: 'Work Sans';
+}
+button.active, button:active{
+	background: rgb(100, 100, 100);
+    border: 1px solid rgb(0,0,0);
+    box-shadow: 0 0 2px 0 rgb(0,0,0);
+}
+div#qq{
+	width: 65px;
+	height:65px;
+	float:left;
+}
+#ww{
+	width: 65px;
+	height:65px;
+	float:left;
+}
+#ee{
+	width: 65px;
+	height:65px;
+	float:left;
+}
+#rr{
+	width: 65px;
+	height:65px;
+	float:left;
+}
+#tt{
+	width: 65px;
+	height:65px;
+	float:left;
+}
+#yy{
+	width: 65px;
+	height:65px;
+	float:left;
+}
+#uu{
+	width: 65px;
+	height:65px;
+	float:left;
+}
+#ii{
+	width: 65px;
+	height:65px;
+	float:left;
+}
+#oo{
+	width: 65px;
+	height:65px;
+	float:left;
+}
+#pp{
+	width: 65px;
+	height:65px;
+	float:left;
+}
+#aa{
+	width: 65px;
+	height:65px;
+	clear:left;
+	float : left;
+}
+#ss{
+	width: 65px;
+	height:65px;
+	float:left;
+}
+#dd{
+	width: 65px;
+	height:65px;
+	float:left;
+}
+#ff{
+	width: 65px;
+	height:65px;
+	float:left;
+}
+#gg{
+	width: 65px;
+	height:65px;
+	float:left;
+}
+#hh{
+	width: 65px;
+	height:65px;
+	float:left;
+}
+#jj{
+	width: 65px;
+	height:65px;
+	float:left;
+}
+#kk{
+	width: 65px;
+	height:65px;
+	float:left;
+}
+#ll{
+	width: 65px;
+	height:65px;
+	float:left;
+}
+#zz{
+	width: 65px;
+	height:65px;
+	clear:left;
+	float: left;
+}
+#xx{
+	width: 65px;
+	height:65px;
+	float:left;
+}
+#cc{
+	width: 65px;
+	height:65px;
+	float:left;
+}
+#vv{
+	width: 65px;
+	height:65px;
+	float:left;
+}
+#bb{
+	width: 65px;
+	height:65px;
+	float:left;
+}
+#nn{
+	width: 65px;
+	height:65px;
+	float:left;
+}
+#mm{
+	width: 65px;
+	height:65px;
+	float:left;
+}
+p.panel_label {
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1  0px;
+    padding: 5px;
+    margin: 5px 0px 5px 0px;
+    clear:left;
+}
+#transport{
+    padding:10px;
+    margin: 5px 0px 0px 0px;
+    background: rgb(220, 220, 220);
+    width:300px;
+    height:150px;
+    clear:left;
+    float:left;
+}
+
+#play_button{
+    margin: 40px 10px 10px 30px;
+    float:left;
+}
+
+</style>
+
+
+
+<body>
+<h1 style = "text-align : center; color:#C63D0F"> CTP431 - FINAL PROJECT </h1>
+<h2 style = "text-align : right; color:#C63D0F"> LOOP STATION</h2>
+<h2 style = "text-align:right;  color:rgb(0, 0, 0)"> 20150500 Seonghui Yu</h2>
+<br>
+<br>
+<div id = "qq" align = "center">
+    <button id="qq_sound" onmousedown="playsound(0)" > Q </button>
+</div>
+<div id = "ww" align = "center">
+    <button id="ww_sound" onmousedown="playsound(1)" > W </button>
+</div>
+<div id = "ee" align = "center">
+    <button id="ee_sound" onmousedown="playsound(2)" > E </button>
+</div>
+<div id = "rr" align = "center">
+    <button id="rr_sound" onmousedown="playsound(3)" > R </button>
+</div>
+<div id = "tt" align = "center">
+    <button id="tt_sound" onmousedown="playsound(4)" > T </button>
+</div>
+<div id = "yy" align = "center">
+    <button id="yy_sound" onmousedown="playsound(5)" > Y </button>
+</div>
+<div id = "uu" align = "center">
+    <button id="uu_sound" onmousedown="playsound(6)" > U </button>
+</div>
+<div id = "ii" align = "center">
+    <button id="ii_sound" onmousedown="playsound(7)" > I </button>
+</div>
+<div id = "oo" align = "center">
+    <button id="oo_sound" onmousedown="playsound(8)" > O </button>
+</div>
+<div id = "pp" align = "center">
+    <button id="pp_sound" onmousedown="playsound(9)" > P </button>
+</div>
+<div id = "aa" align = "center">
+    <button id="aa_sound" onmousedown="playsound(10)" > A </button>
+</div>
+<div id = "ss" align = "center">
+    <button id="ss_sound" onmousedown="playsound(11)" > S </button>
+</div>
+<div id = "dd" align = "center">
+    <button id="dd_sound" onmousedown="playsound(12)" > D </button>
+</div>
+<div id = "ff" align = "center">
+    <button id="ff_sound" onmousedown="playsound(13)" > F </button>
+</div>
+<div id = "gg" align = "center">
+    <button id="gg_sound" onmousedown="playsound(14)" > G </button>
+</div>
+<div id = "hh" align = "center">
+    <button id="hh_sound" onmousedown="playsound(15)" > H </button>
+</div>
+<div id = "jj" align = "center">
+    <button id="jj_sound" onmousedown="playsound(16)" > J </button>
+</div>
+<div id = "kk" align = "center">
+    <button id="kk_sound" onmousedown="playsound(17)" > K </button>
+</div>
+<div id = "ll" align = "center">
+    <button id="ll_sound" onmousedown="playsound(18)" > L </button>
+</div>
+<div id = "zz" align = "center">
+    <button id="zz_sound" onmousedown="playsound(19)" > Z </button>
+</div>
+<div id = "xx" align = "center">
+    <button id="xx_sound" onmousedown="playsound(20)" > X </button>
+</div>
+<div id = "cc" align = "center">
+    <button id="cc_sound" onmousedown="playsound(21)" > C </button>
+</div>
+<div id = "vv" align = "center">
+    <button id="vv_sound" onmousedown="playsound(22)" > V </button>
+</div>
+<div id = "bb" align = "center">
+    <button id="bb_sound" onmousedown="playsound(23)" > B </button>
+</div>
+<div id = "nn" align = "center">
+    <button id="nn_sound" onmousedown="playsound(24)" > N </button>
+</div>
+<div id = "mm" align = "center">
+    <button id="mm_sound" onmousedown="playsound(25)" > M </button>
+</div>
+<br>
+<div id="transport">
+		<p class="panel_label"> Play/Stop </p>
+		<p id="play_button"> </p>
+</div>
+<div id="viz">
+<canvas id="analyser" width="1024" height="500"></canvas>
+<canvas id="wavedisplay" width="1024" height="500"></canvas>
+</div>
+<div id="controls">
+<img id="record" src="mic128.png" onclick="toggleRecording(this);">
+<a id="save" href="#"><img src="save.svg"></a>
+</div>
+
+
+
+<script>
+var play_button = new Nexus.TextButton('#play_button',{
+  'size': [150,50],
+  'state': false,
+  'text': 'Play',
+  'alternate': false,
+  'alternateText': 'Reset'
+})
+
+
+play_button.on('change',function(v) {
+	if (v==1) {
+		var loop = context.createBufferSource()
+		loop.buffer = interleaved
+		loop.connect(context.destination);
+		loop.start()
+	else {
+		return loop;
+	}
+})
+
+var context = new (window.AudioContext || window.webkitAudioContext)();
+var buffers = new Array(26);
+var gain_nodes = new Array(26);
+
+for (i  = 0; i <26; i++) {
+	gain_nodes[i] = context.createGain();
+	gain_nodes[i].gain.value = 50 ;
+}
+
+
+var qq = new XMLHttpRequest();
+qq.open("Get","qq.mp3",true);   //  <---- replace this file with yours
+qq.responseType = "arraybuffer";
+qq.onload = function(){
+	context.decodeAudioData(qq.response, function(buffer){buffers[0] = buffer;});
+}
+qq.send();
+
+var ww = new XMLHttpRequest();
+ww.open("Get","ww.mp3",true);   //  <---- replace this file with yours
+ww.responseType = "arraybuffer";
+ww.onload = function(){
+	context.decodeAudioData(ww.response, function(buffer){buffers[1] = buffer;});
+}
+ww.send();
+
+var ee = new XMLHttpRequest();
+ee.open("Get","ee.mp3",true);   //  <---- replace this file with yours
+ee.responseType = "arraybuffer";
+ee.onload = function(){
+	context.decodeAudioData(ee.response, function(buffer){buffers[2] = buffer;});
+}
+ee.send();
+
+var rr = new XMLHttpRequest();
+rr.open("Get","rr.mp3",true);   //  <---- replace this file with yours
+rr.responseType = "arraybuffer";
+rr.onload = function(){
+	context.decodeAudioData(rr.response, function(buffer){buffers[3] = buffer;});
+}
+rr.send();
+
+var tt = new XMLHttpRequest();
+tt.open("Get","tt.mp3",true);   //  <---- replace this file with yours
+tt.responseType = "arraybuffer";
+tt.onload = function(){
+	context.decodeAudioData(tt.response, function(buffer){buffers[4] = buffer;});
+}
+tt.send();
+
+var yy = new XMLHttpRequest();
+yy.open("Get","yy.mp3",true);   //  <---- replace this file with yours
+yy.responseType = "arraybuffer";
+yy.onload = function(){
+	context.decodeAudioData(yy.response, function(buffer){buffers[5] = buffer;});
+}
+yy.send();
+
+var uu = new XMLHttpRequest();
+uu.open("Get","uu.mp3",true);   //  <---- replace this file with yours
+uu.responseType = "arraybuffer";
+uu.onload = function(){
+	context.decodeAudioData(uu.response, function(buffer){buffers[6] = buffer;});
+}
+uu.send();
+    
+var ii = new XMLHttpRequest();
+ii.open("Get","ii.mp3",true);   //  <---- replace this file with yours
+ii.responseType = "arraybuffer";
+ii.onload = function(){
+	context.decodeAudioData(ii.response, function(buffer){buffers[7] = buffer;});
+}
+ii.send();
+
+var oo = new XMLHttpRequest();
+oo.open("Get","oo.mp3",true);   //  <---- replace this file with yours
+oo.responseType = "arraybuffer";
+oo.onload = function(){
+	context.decodeAudioData(oo.response, function(buffer){buffers[8] = buffer;});
+}
+oo.send();
+
+var pp = new XMLHttpRequest();
+pp.open("Get","pp.mp3",true);   //  <---- replace this file with yours
+pp.responseType = "arraybuffer";
+pp.onload = function(){
+	context.decodeAudioData(pp.response, function(buffer){buffers[9] = buffer;});
+}
+pp.send();
+
+var aa = new XMLHttpRequest();
+aa.open("Get","aa.mp3",true);   //  <---- replace this file with yours
+aa.responseType = "arraybuffer";
+aa.onload = function(){
+	context.decodeAudioData(aa.response, function(buffer){buffers[10] = buffer;});
+}
+aa.send();
+
+var ss = new XMLHttpRequest();
+ss.open("Get","ss.mp3",true);   //  <---- replace this file with yours
+ss.responseType = "arraybuffer";
+ss.onload = function(){
+	context.decodeAudioData(ss.response, function(buffer){buffers[11] = buffer;});
+}
+ss.send();
+
+var dd = new XMLHttpRequest();
+dd.open("Get","dd.mp3",true);   //  <---- replace this file with yours
+dd.responseType = "arraybuffer";
+dd.onload = function(){
+	context.decodeAudioData(dd.response, function(buffer){buffers[12] = buffer;});
+}
+dd.send();
+
+var ff = new XMLHttpRequest();
+ff.open("Get","ff.mp3",true);   //  <---- replace this file with yours
+ff.responseType = "arraybuffer";
+ff.onload = function(){
+	context.decodeAudioData(ff.response, function(buffer){buffers[13] = buffer;});
+}
+ff.send();
+
+var gg = new XMLHttpRequest();
+gg.open("Get","gg.mp3",true);   //  <---- replace this file with yours
+gg.responseType = "arraybuffer";
+gg.onload = function(){
+	context.decodeAudioData(gg.response, function(buffer){buffers[14] = buffer;});
+}
+gg.send();
+
+var hh = new XMLHttpRequest();
+hh.open("Get","hh.mp3",true);   //  <---- replace this file with yours
+hh.responseType = "arraybuffer";
+hh.onload = function(){
+	context.decodeAudioData(hh.response, function(buffer){buffers[15] = buffer;});
+}
+hh.send();
+
+var jj = new XMLHttpRequest();
+jj.open("Get","jj.mp3",true);   //  <---- replace this file with yours
+jj.responseType = "arraybuffer";
+jj.onload = function(){
+	context.decodeAudioData(jj.response, function(buffer){buffers[16] = buffer;});
+}
+jj.send();
+
+var kk = new XMLHttpRequest();
+kk.open("Get","kk.mp3",true);   //  <---- replace this file with yours
+kk.responseType = "arraybuffer";
+kk.onload = function(){
+	context.decodeAudioData(kk.response, function(buffer){buffers[17] = buffer;});
+}
+kk.send();
+
+var ll = new XMLHttpRequest();
+ll.open("Get","ll.mp3",true);   //  <---- replace this file with yours
+ll.responseType = "arraybuffer";
+ll.onload = function(){
+	context.decodeAudioData(ll.response, function(buffer){buffers[18] = buffer;});
+}
+ll.send();
+
+var zz = new XMLHttpRequest();
+zz.open("Get","zz.mp3",true);   //  <---- replace this file with yours
+zz.responseType = "arraybuffer";
+zz.onload = function(){
+	context.decodeAudioData(zz.response, function(buffer){buffers[19] = buffer;});
+}
+zz.send();
+
+var xx = new XMLHttpRequest();
+xx.open("Get","xx.mp3",true);   //  <---- replace this file with yours
+xx.responseType = "arraybuffer";
+xx.onload = function(){
+	context.decodeAudioData(xx.response, function(buffer){buffers[20] = buffer;});
+}
+xx.send();
+
+var cc = new XMLHttpRequest();
+cc.open("Get","cc.mp3",true);   //  <---- replace this file with yours
+cc.responseType = "arraybuffer";
+cc.onload = function(){
+	context.decodeAudioData(cc.response, function(buffer){buffers[21] = buffer;});
+}
+cc.send();
+
+var vv = new XMLHttpRequest();
+vv.open("Get","vv.mp3",true);   //  <---- replace this file with yours
+vv.responseType = "arraybuffer";
+vv.onload = function(){
+	context.decodeAudioData(vv.response, function(buffer){buffers[22] = buffer;});
+}
+vv.send();
+
+var bb = new XMLHttpRequest();
+bb.open("Get","bb.mp3",true);   //  <---- replace this file with yours
+bb.responseType = "arraybuffer";
+bb.onload = function(){
+	context.decodeAudioData(bb.response, function(buffer){buffers[23] = buffer;});
+}
+bb.send();
+
+var nn = new XMLHttpRequest();
+nn.open("Get","nn.mp3",true);   //  <---- replace this file with yours
+nn.responseType = "arraybuffer";
+nn.onload = function(){
+	context.decodeAudioData(nn.response, function(buffer){buffers[24] = buffer;});
+}
+nn.send();
+
+var mm = new XMLHttpRequest();
+mm.open("Get","mm.mp3",true);   //  <---- replace this file with yours
+mm.responseType = "arraybuffer";
+mm.onload = function(){
+	context.decodeAudioData(mm.response, function(buffer){buffers[25] = buffer;});
+}
+mm.send();
+
+
+window.onload=function(){
+	window.addEventListener('keydown', function(key) {
+		keyboardDown(key);
+	}, false);
+
+	window.addEventListener('keyup', function(key){
+		keyboardUp(key);
+	}, false);
+}
+
+
+function playsound(i) {
+	var num =i;
+	var source = context.createBufferSource();
+	source.buffer = buffers[i];
+	source.connect(context.destination);
+	source.start(context.currentTime);
+}
+
+function keyboardDown(key) {
+	switch (key.keyCode) {
+		case 81 : //'q'
+		var qq_sound = document.getElementById("qq_sound");
+		qq_sound.calssName = 'active';
+		simulateClick(qq_sound);
+		break;
+
+		case 87 : //'w'
+		var ww_sound = document.getElementById("ww_sound");
+		ww_sound.calssName = 'active';
+		simulateClick(ww_sound);
+		break;
+
+		case 69 : //'e'
+		var ee_sound = document.getElementById("ee_sound");
+		ee_sound.calssName = 'active';
+		simulateClick(ee_sound);
+		break;
+
+		case 82 : //'r'
+		var rr_sound = document.getElementById("rr_sound");
+		rr_sound.calssName = 'active';
+		simulateClick(rr_sound);
+		break;
+
+		case 84 : //'t'
+		var tt_sound = document.getElementById("tt_sound");
+		tt_sound.calssName = 'active';
+		simulateClick(tt_sound);
+		break;
+
+		case 89 : //'y'
+		var yy_sound = document.getElementById("yy_sound");
+		yy_sound.calssName = 'active';
+		simulateClick(yy_sound);
+		break;
+
+		case 85 : //'u'
+		var uu_sound = document.getElementById("uu_sound");
+		uu_sound.calssName = 'active';
+		simulateClick(uu_sound);
+		break;
+
+		case 73 : //'i'
+		var ii_sound = document.getElementById("ii_sound");
+		ii_sound.calssName = 'active';
+		simulateClick(ii_sound);
+		break;
+
+		case 79 : //'o'
+		var oo_sound = document.getElementById("oo_sound");
+		oo_sound.calssName = 'active';
+		simulateClick(oo_sound);
+		break;
+
+		case 80 : //'p'
+		var pp_sound = document.getElementById("pp_sound");
+		pp_sound.calssName = 'active';
+		simulateClick(pp_sound);
+		break;
+
+		case 65 : //'a'
+		var aa_sound = document.getElementById("aa_sound");
+		aa_sound.calssName = 'active';
+		simulateClick(aa_sound);
+		break;
+
+		case 83 : //'s'
+		var ss_sound = document.getElementById("ss_sound");
+		ss_sound.calssName = 'active';
+		simulateClick(ss_sound);
+		break;
+
+		case 68 : //'d'
+		var dd_sound = document.getElementById("dd_sound");
+		dd_sound.calssName = 'active';
+		simulateClick(dd_sound);
+		break;
+
+		case 70 : //'f'
+		var ff_sound = document.getElementById("ff_sound");
+		ff_sound.calssName = 'active';
+		simulateClick(ff_sound);
+		break;
+
+		case 71 : //'g'
+		var gg_sound = document.getElementById("gg_sound");
+		gg_sound.calssName = 'active';
+		simulateClick(gg_sound);
+		break;
+
+		case 72 : //'h'
+		var hh_sound = document.getElementById("hh_sound");
+		hh_sound.calssName = 'active';
+		simulateClick(hh_sound);
+		break;
+
+		case 74 : //'j'
+		var jj_sound = document.getElementById("jj_sound");
+		jj_sound.calssName = 'active';
+		simulateClick(jj_sound);
+		break;
+
+		case 75 : //'k'
+		var kk_sound = document.getElementById("kk_sound");
+		kk_sound.calssName = 'active';
+		simulateClick(kk_sound);
+		break;
+
+		case 76 : //'l'
+		var ll_sound = document.getElementById("ll_sound");
+		ll_sound.calssName = 'active';
+		simulateClick(ll_sound);
+		break;
+
+		case 90 : //'z'
+		var zz_sound = document.getElementById("zz_sound");
+		zz_sound.calssName = 'active';
+		simulateClick(zz_sound);
+		break;
+
+		case 88 : //'x'
+		var xx_sound = document.getElementById("xx_sound");
+		xx_sound.calssName = 'active';
+		simulateClick(xx_sound);
+		break;
+
+		case 67 : //'c'
+		var cc_sound = document.getElementById("cc_sound");
+		cc_sound.calssName = 'active';
+		simulateClick(cc_sound);
+		break;
+
+		case 86 : //'v'
+		var vv_sound = document.getElementById("vv_sound");
+		vv_sound.calssName = 'active';
+		simulateClick(vv_sound);
+		break;
+
+		case 66 : //'b'
+		var bb_sound = document.getElementById("bb_sound");
+		bb_sound.calssName = 'active';
+		simulateClick(bb_sound);
+		break;
+
+		case 78 : //'n'
+		var nn_sound = document.getElementById("nn_sound");
+		nn_sound.calssName = 'active';
+		simulateClick(nn_sound);
+		break;
+		
+		case 77 : //'m'
+		var mm_sound = document.getElementById("mm_sound");
+		mm_sound.calssName = 'active';
+		simulateClick(mm_sound);
+		break;		
+	}
+}
+
+function keyboardUp(key) {
+	switch (key.keyCode) {
+		case 81 : //'q'
+		var qq_sound = document.getElementById("qq_sound");
+		qq_sound.calssName = '';
+		break;
+
+		case 87 : //'w'
+		var ww_sound = document.getElementById("ww_sound");
+		ww_sound.calssName = '';
+		break;
+
+		case 69 : //'e'
+		var ee_sound = document.getElementById("ee_sound");
+		ee_sound.calssName = '';
+		break;
+
+		case 82 : //'r'
+		var rr_sound = document.getElementById("rr_sound");
+		rr_sound.calssName = '';
+		break;
+
+		case 84 : //'t'
+		var tt_sound = document.getElementById("tt_sound");
+		tt_sound.calssName = '';
+		break;
+
+		case 89 : //'y'
+		var yy_sound = document.getElementById("yy_sound");
+		yy_sound.calssName = '';
+		break;
+
+		case 85 : //'u'
+		var uu_sound = document.getElementById("uu_sound");
+		uu_sound.calssName = '';
+		break;
+
+		case 73 : //'i'
+		var ii_sound = document.getElementById("ii_sound");
+		ii_sound.calssName = '';
+		break;
+
+		case 79 : //'o'
+		var oo_sound = document.getElementById("oo_sound");
+		oo_sound.calssName = '';
+		break;
+
+		case 80 : //'p'
+		var pp_sound = document.getElementById("pp_sound");
+		pp_sound.calssName = '';
+		break;
+
+		case 65 : //'a'
+		var aa_sound = document.getElementById("aa_sound");
+		aa_sound.calssName = '';
+		break;
+
+		case 83 : //'s'
+		var ss_sound = document.getElementById("ss_sound");
+		ss_sound.calssName = '';
+		break;
+
+		case 68 : //'d'
+		var dd_sound = document.getElementById("dd_sound");
+		dd_sound.calssName = '';
+		break;
+
+		case 70 : //'f'
+		var ff_sound = document.getElementById("ff_sound");
+		ff_sound.calssName = '';
+		break;
+
+		case 71 : //'g'
+		var gg_sound = document.getElementById("gg_sound");
+		gg_sound.calssName = '';
+		break;
+
+		case 72 : //'h'
+		var hh_sound = document.getElementById("hh_sound");
+		hh_sound.calssName = '';
+		break;
+
+		case 74 : //'j'
+		var jj_sound = document.getElementById("jj_sound");
+		jj_sound.calssName = '';
+		break;
+
+		case 75 : //'k'
+		var kk_sound = document.getElementById("kk_sound");
+		kk_sound.calssName = '';
+		break;
+
+		case 76 : //'l'
+		var ll_sound = document.getElementById("ll_sound");
+		ll_sound.calssName = '';
+		break;
+
+		case 90 : //'z'
+		var zz_sound = document.getElementById("zz_sound");
+		zz_sound.calssName = '';
+		break;
+
+		case 88 : //'x'
+		var xx_sound = document.getElementById("xx_sound");
+		xx_sound.calssName = '';
+		break;
+
+		case 67 : //'c'
+		var cc_sound = document.getElementById("cc_sound");
+		cc_sound.calssName = '';
+		break;
+
+		case 86 : //'v'
+		var vv_sound = document.getElementById("vv_sound");
+		vv_sound.calssName = '';
+		break;
+
+		case 66 : //'b'
+		var bb_sound = document.getElementById("bb_sound");
+		bb_sound.calssName = '';
+		break;
+
+		case 78 : //'n'
+		var nn_sound = document.getElementById("nn_sound");
+		nn_sound.calssName = '';
+		break;
+		
+		case 77 : //'m'
+		var mm_sound = document.getElementById("mm_sound");
+		mm_sound.calssName = '';
+		break;
+	}
+}
+
+function simulateClick(element) {
+	var event = new MouseEvent("mousedown", {
+		bubbles: true,
+		cancelable:true,
+		view:window
+	});
+	element.dispatchEvent(event);
+}
+
+
+</script>
+</body>
+
+
+</html>

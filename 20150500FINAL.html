@@ -349,10 +349,13 @@ var play_button = new Nexus.TextButton('#play_button',{
 
 
 play_button.on('change',function(v) {
-	while (v==1) {
+	if (v==1) {
 		var loop = audioContext.createBufferSource();
 		loop.connect(audioContext.destination);
 		loop.start();
+	}
+	else {
+		return loop;
 	}
 })
 

@@ -24,7 +24,7 @@ var rafID = null;
 var analyserContext = null;
 var canvasWidth, canvasHeight;
 var recIndex = 0;
-var recordedBuffers;
+var recordedAudioBuffers;
 
 /* TODO:
 
@@ -40,7 +40,7 @@ function saveAudio() {
 
 function gotBuffers( buffers ) {
     var canvas = document.getElementById( "wavedisplay" );
-	recordedBuffers = buffers;
+	recordedAudioBuffers = audioContext.createBuffer(buffers.length, buffers[0].length, audioContext.sampleRate);
     drawBuffer( canvas.width, canvas.height, canvas.getContext('2d'), buffers[0] );
 
     // the ONLY time gotBuffers is called is right after a new recording is completed - 

@@ -41,9 +41,16 @@ function saveAudio() {
 function gotBuffers( buffers ) {
     var canvas = document.getElementById( "wavedisplay" );
 	recordedAudioBuffers = audioContext.createBuffer(buffers.length, buffers[0].length, audioContext.sampleRate);
+
+    for(var channelIndex = 0; channelIndex < buffers.length; channelIndex++) {
+        var channelBuffer = recordedAudioBuffers.getChannelData(channelIndex);
+        for(var sampleIndex = 0; sampleIndex < buffers[0].length; sampleIndex++) {
+            channelBuffer[sampleIndex] = buffers[channelIndex][sampleIndex];
+        }
+    }
     drawBuffer( canvas.width, canvas.height, canvas.getContext('2d'), buffers[0] );
 
-    // the ONLY time gotBuffers is called is right after a new recording is completed - 
+    // the ONLY time gotBuffers is called is right after a new recording is completed -
     // so here's where we should set up the download.
     audioRecorder.exportWAV( doneEncoding );
 }
@@ -99,7 +106,7 @@ function updateAnalysers(time) {
         var numBars = Math.round(canvasWidth / SPACING);
         var freqByteData = new Uint8Array(analyserNode.frequencyBinCount);
 
-        analyserNode.getByteFrequencyData(freqByteData); 
+        analyserNode.getByteFrequencyData(freqByteData);
 
         analyserContext.clearRect(0, 0, canvasWidth, canvasHeight);
         analyserContext.fillStyle = '#F6D565';
@@ -119,7 +126,7 @@ function updateAnalysers(time) {
             analyserContext.fillRect(i * SPACING, canvasHeight, BAR_WIDTH, -magnitude);
         }
     }
-    
+
     rafID = window.requestAnimationFrame( updateAnalysers );
 }
 

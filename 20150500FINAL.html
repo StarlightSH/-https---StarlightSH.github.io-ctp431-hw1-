@@ -20,8 +20,8 @@ body, html{
 	font-family:'Work Sans';
 }
 canvas {
-	display: inline-block; 
-	background: #202020; 
+	display: inline-block;
+	background: #202020;
 	width: 95%;
 	height: 45%;
 	box-shadow: 0px 0px 10px blue;
@@ -39,9 +39,9 @@ canvas {
 
 #record.recording {
 	background: red;
-	background: -webkit-radial-gradient(center, ellipse cover, #ff0000 0%,lightgrey 75%,lightgrey 100%,#7db9e8 100%); 
-	background: -moz-radial-gradient(center, ellipse cover, #ff0000 0%,lightgrey 75%,lightgrey 100%,#7db9e8 100%); 
-	background: radial-gradient(center, ellipse cover, #ff0000 0%,lightgrey 75%,lightgrey 100%,#7db9e8 100%); 
+	background: -webkit-radial-gradient(center, ellipse cover, #ff0000 0%,lightgrey 75%,lightgrey 100%,#7db9e8 100%);
+	background: -moz-radial-gradient(center, ellipse cover, #ff0000 0%,lightgrey 75%,lightgrey 100%,#7db9e8 100%);
+	background: radial-gradient(center, ellipse cover, #ff0000 0%,lightgrey 75%,lightgrey 100%,#7db9e8 100%);
 }
 
 #save, #save img { height: 10vh; }
@@ -425,7 +425,7 @@ uu.onload = function(){
 	context.decodeAudioData(uu.response, function(buffer){buffers[6] = buffer;});
 }
 uu.send();
-    
+
 var ii = new XMLHttpRequest();
 ii.open("Get","ii.mp3",true);   //  <---- replace this file with yours
 ii.responseType = "arraybuffer";
@@ -749,12 +749,12 @@ function keyboardDown(key) {
 		nn_sound.calssName = 'active';
 		simulateClick(nn_sound);
 		break;
-		
+
 		case 77 : //'m'
 		var mm_sound = document.getElementById("mm_sound");
 		mm_sound.calssName = 'active';
 		simulateClick(mm_sound);
-		break;		
+		break;
 	}
 }
 
@@ -884,7 +884,7 @@ function keyboardUp(key) {
 		var nn_sound = document.getElementById("nn_sound");
 		nn_sound.calssName = '';
 		break;
-		
+
 		case 77 : //'m'
 		var mm_sound = document.getElementById("mm_sound");
 		mm_sound.calssName = '';

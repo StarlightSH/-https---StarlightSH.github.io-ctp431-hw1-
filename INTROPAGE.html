@@ -27,6 +27,28 @@ h3{
 	font-size : 23px;
 	color : black;
 }
+.container{
+	width:80vw;
+	height:100vw;
+	background:#81BEF7;
+	margin:0 auto;
+}
+.movie {
+	position:relative;
+	max-width:100%;
+	height:0;
+	overflow:hidden;
+}
+.movie iframe{
+	position:absolute;
+	width:100%;
+	height:100%;
+	top:0;
+	left:0;
+}
+.is-4by3{padding-top:75%}
+.is-16by9{padding-top:56.25%}
+.is-21by9{padding-top:42.857142857%}
 </style>
 
 
@@ -103,12 +125,12 @@ You can stack another sound on that by turning on both play button and record bu
 If you turn off the record button, the newly recorded loop is played again and again while the play button on.
 And evey time you stop the record, the newly recorded loop can be downloaded by pushing the download button.
 You can saw the example below video.</p>
-
-
-
-<p align="center"><iframe src="https://youtu.be/Z6cEqJMxKQ0" frameborder="0"  </iframe> </p>
 <br>
 <br>
+
+<div class="container">
+<div class="movie is-16by9">
+<iframe src="https://youtu.be/a9vJ2SSO7Gs" width="560" height="315" frameborder="0" allowfullscreen></iframe></div></div>
 <br>
 
 
